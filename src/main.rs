@@ -43,24 +43,24 @@ fn main() {
     let dir = matches.value_of("dir").unwrap();
     let run_for = matches.value_of("run").unwrap_or("all");
     let cmd = Cmd::new(String::from(BASE_PATH), String::from(dir), true);
-    let mut gen_command_for: Vec<Command> = Vec::new();
+    let mut gen_command_for: Vec<String> = Vec::new();
     
     for run in run_for.split(",") {
         if run == "jswire" || run == "all" {
-            gen_command_for.push(Command::new(cmd.create_build_cmd(CmdType::Jswire)));
+            gen_command_for.push(cmd.create_build_cmd(CmdType::Jswire));
         }
         if run == "build" || run == "all" {
-            gen_command_for.push(Command::new(cmd.create_build_cmd(CmdType::Build)));
+            gen_command_for.push(cmd.create_build_cmd(CmdType::Build));
         }
         if run == "jstest" || run == "all" {
-            gen_command_for.push(Command::new(cmd.create_build_cmd(CmdType::JsTest)));
+            gen_command_for.push(cmd.create_build_cmd(CmdType::JsTest));
         }
     }
     if matches.is_present("explain") {
         explain(gen_command_for);
         return;
     }
-
+    
     let mut ghelp_cmd = Command::new(cmd.create_build_cmd(CmdType::JsTest));
     println!(" >>> Start {:?}", ghelp_cmd);
     ghelp_cmd
@@ -69,9 +69,15 @@ fn main() {
         .expect("Process failed");
 }
 
-fn explain(cmds: Vec<Command>) {
+fn run_commands(cmds: Vec<String>) {
     for cmd in cmds {
-        let t = format!("{:?}", cmd);
-        println!("{}", t.red());
+        let cmd_array = cmd.split(" ");
+
+    }
+}
+
+fn explain(cmds: Vec<String>) {
+    for cmd in cmds {
+        println!("{}", cmd.red());
     }
 }
