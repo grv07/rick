@@ -6,7 +6,7 @@ mod cmd_generator;
 
 use cmd_generator::base::{Cmd, CmdType};
 
-const BASE_PATH: &str = "google3/java/com/google/social/boq/blogger";
+const BASE_PATH: &str = "java/com/google/social/boq/blogger";
 
 fn main() {
     ///////////// CLAP START //////////////////////////
