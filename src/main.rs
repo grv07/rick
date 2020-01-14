@@ -1,5 +1,6 @@
 use clap::{App, Arg};
 use std::process::{Command, Stdio};
+use std::io::{self, Write};
 use colored::*;
 
 mod cmd_generator;
@@ -68,17 +69,16 @@ fn run_commands(cmds: Vec<String>) {
         let mut cmd_array: Vec<&str> = cmd.split(" ").collect();
         let output = Command::new(cmd_array[0])
             .args(&mut cmd_array.split_off(1))
-            .stdout(Stdio::inherit())
             .output()
             .expect("Process failed");
-
-        println!("{:?}", output.stdout);
+        println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+        println!("stderr: {}", String::from_utf8_lossy(&output.stderr));
     }
 }
 
 fn explain(cmds: Vec<String>) {
     for cmd in cmds {
-        println!("{}", cmd.yellow());
+        println!(">>{}", cmd.yellow());
     }
 }
 
