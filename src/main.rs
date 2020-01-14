@@ -66,11 +66,13 @@ fn main() {
 fn run_commands(cmds: Vec<String>) {
     for cmd in cmds {
         let mut cmd_array: Vec<&str> = cmd.split(" ").collect();
-        Command::new(cmd_array[0])
+        let output = Command::new(cmd_array[0])
             .args(&mut cmd_array.split_off(1))
             .stdout(Stdio::inherit())
             .output()
             .expect("Process failed");
+
+        println!("{:?}", output.stdout);
     }
 }
 
