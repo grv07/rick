@@ -1,4 +1,3 @@
-//extern crate clap;
 use clap::{App, Arg};
 use std::process::{Command, Stdio};
 use colored::*;
