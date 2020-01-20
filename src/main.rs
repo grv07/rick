@@ -1,6 +1,5 @@
 use clap::{App, Arg};
 use std::process::{Command, Stdio};
-use std::io::{self, Write};
 use colored::*;
 
 mod cmd_generator;
@@ -37,6 +36,13 @@ fn main() {
                 .long("iblaze")
                 .value_name("Enable debug mode for jswire and jstest"),
         )
+        .arg(
+            Arg::with_name("command")
+                .short("cmd")
+                .long("command")
+                .takes_value(true)
+                .value_name("Command, give command to execute"),
+        )
         .get_matches();
     ///////////// END ////
 
@@ -56,23 +62,33 @@ fn main() {
             generated_cmds.push(cmd.create_build_cmd(CmdType::JsTest));
         }
     }
+    // run a custom command only.
+    if matches.is_present("command") {
+        generated_cmds.clear();
+        let mut command_list = matches.value_of("command").unwrap().split(",");
+        while let Some(x) = command_list.next() {
+            generated_cmds.push(x.to_string());
+        }
+    }
     if matches.is_present("explain") {
         explain(generated_cmds);
         return;
     }
-
     run_commands(generated_cmds);
 }
 
 fn run_commands(cmds: Vec<String>) {
     for cmd in cmds {
+
         let mut cmd_array: Vec<&str> = cmd.split(" ").collect();
-        let output = Command::new(cmd_array[0])
+        let mut output = Command::new(cmd_array[0])
             .args(&mut cmd_array.split_off(1))
-            .output()
-            .expect("Process failed");
-        println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
-        println!("stderr: {}", String::from_utf8_lossy(&output.stderr));
+            .stdout(Stdio::inherit())
+            .spawn()
+            .unwrap();
+        let result = output.wait();
+
+        println!("Command: {} exit with: {}", cmd.green(), result.unwrap().to_string().green());
     }
 }
 
