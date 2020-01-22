@@ -1,2 +1,0 @@
-Support soy fle formting. Open file text in vim and format with 2 space tab.
-Support print running port for benug commands after stdout is empty.
