@@ -19,7 +19,7 @@ pub mod base {
         }
 
         pub fn create_build_cmd(&self, cmd_type: CmdType) -> String {
-            let mut param = String::new();
+            let param: String;
             match cmd_type {
                 CmdType::Build => {
                     param = format!("blaze build {}/{}/...",self.base_path, self.dir);
